@@ -20,9 +20,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("api/topics")
 public class TopicController {
 
-	@Autowired
+	
 	private final TopicService topicService;
 
+	@Autowired
 	public TopicController(TopicService topicService) {
 		this.topicService = topicService;
 	}
