@@ -5,14 +5,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
+@Lazy
 public class TopicServiceImpl implements TopicService {
 
 	private List<Topic> topics;
-
+	
 	public TopicServiceImpl() {
+		System.out.println("Service Init");
 		Topic t1 = new Topic("spring", "Spring Framework", "Spring Framework");
 		Topic t2 = new Topic("java", "Core Java", "Core Java Description");
 		Topic t3 = new Topic("javascript", "Javascript", "Javascript Description");

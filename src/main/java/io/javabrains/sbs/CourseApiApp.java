@@ -5,6 +5,10 @@ import java.util.HashMap;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
+/**
+ * @author AtulChaudhary
+ *
+ */
 @SpringBootApplication
 public class CourseApiApp {
 
