@@ -3,9 +3,7 @@ package io.javabrains.sbs.topic;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
 
-@Service
 public interface TopicService {
 
 	public Optional<List<Topic>> getAllTopics();

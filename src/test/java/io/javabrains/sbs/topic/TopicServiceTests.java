@@ -20,5 +20,6 @@ public class TopicServiceTests {
 	public void getAllTopics_returnAllRecords() {
 		assertNotNull(topicService);
 		assertTrue(topicService.getAllTopics().get().stream().count() == 3);
+
 	}
 }
