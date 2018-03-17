@@ -30,20 +30,16 @@ public class TopicController {
 	@RequestMapping()
 	public ResponseEntity<?> getAllTopics() {
 		Optional<List<Topic>> optTopics = topicService.getAllTopics();
-		if (optTopics.isPresent())
-			return ResponseEntity.ok(optTopics.get());
-		
-		return ResponseEntity.status(500).build();
+
+		return optTopics.isPresent() ? ResponseEntity.ok(optTopics.get()) : ResponseEntity.status(500).build();
 	}
 
 	@RequestMapping("{id}")
 	public ResponseEntity<?> getTopic(@PathVariable String id) {
 		Optional<Topic> topicOption = topicService.getTopic(id);
 
-		if (topicOption.isPresent())
-			return ResponseEntity.ok(topicOption.get());
-
-		return ResponseEntity.badRequest().body(Arrays.asList("Some Error"));
+		return topicOption.isPresent() ? ResponseEntity.ok(topicOption.get())
+				: ResponseEntity.badRequest().body(Arrays.asList("Some Error"));
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -53,8 +49,6 @@ public class TopicController {
 
 		URI uri = UriComponentsBuilder.newInstance().scheme("http").host("localhost")
 				.path("/api/topics/" + topic.getId()).build().toUri();
-
-		System.out.println(uri);
 
 		return ResponseEntity.created(uri).build();
 	}

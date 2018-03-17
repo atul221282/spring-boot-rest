@@ -34,6 +34,7 @@ public class TopicControllerTests {
 
 		assertNotNull(topicController);
 
+		@SuppressWarnings("unchecked")
 		ResponseEntity<List<Topic>> response = (ResponseEntity<List<Topic>>) topicController.getAllTopics();
 
 		assertTrue(response.getStatusCodeValue() == 200);
@@ -44,13 +45,13 @@ public class TopicControllerTests {
 	}
 
 	@Test
-	public void getAllTopics_returnok_withInvalidrequest() throws Exception {
+	public void getAllTopics_returnError_withInvalidrequest() throws Exception {
 
-		Mockito.when(topicService.getAllTopics())
-				.thenReturn(Optional.ofNullable(null));
+		Mockito.when(topicService.getAllTopics()).thenReturn(Optional.ofNullable(null));
 
 		assertNotNull(topicController);
 
+		@SuppressWarnings("rawtypes")
 		ResponseEntity response = topicController.getAllTopics();
 
 		assertTrue(response.getStatusCodeValue() == 500);

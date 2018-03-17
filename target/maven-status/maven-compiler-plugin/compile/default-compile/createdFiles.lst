@@ -1,5 +1,5 @@
 io\javabrains\sbs\topic\TopicController.class
 io\javabrains\sbs\topic\TopicService.class
 io\javabrains\sbs\CourseApiApp.class
-io\javabrains\sbs\topic\Topic.class
 io\javabrains\sbs\hello\HelloController.class
+io\javabrains\sbs\topic\Topic.class
