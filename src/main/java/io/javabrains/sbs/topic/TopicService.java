@@ -2,6 +2,7 @@ package io.javabrains.sbs.topic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,13 +20,13 @@ public class TopicService {
 		topics = new ArrayList<>(Arrays.asList(t1, t2, t3));
 	}
 
-	public List<Topic> getAllTopics() {
-		return topics;
+	public Optional<List<Topic>> getAllTopics() {
+		return Optional.of(topics);
 	}
 
 	public Optional<Topic> getTopic(String id) {
 		return id.isEmpty() ? Optional.empty()
-				: getAllTopics().stream().filter(tp -> tp.getId().equals(id)).findFirst();
+				: getAllTopics().get().stream().filter(tp -> tp.getId().equals(id)).findFirst();
 	}
 
 	public void addTopic(Topic topic) {
@@ -40,7 +41,7 @@ public class TopicService {
 			throw new Exception("No topic found");
 		}
 
-		int index = getAllTopics().lastIndexOf(toUpdate.get());
+		int index = getAllTopics().get().lastIndexOf(toUpdate.get());
 
 		topics.set(index, topic);
 

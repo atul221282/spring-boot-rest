@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,35 +15,45 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = TopicController.class, secure = false)
-public class TopicControllerTest {
+public class TopicControllerTests {
 
 	@MockBean
 	private TopicService topicService;
 
 	@Autowired
-	private MockMvc mvc;
-
-	@Autowired
 	private TopicController topicController;
 
 	@Test
-	public void contexLoads() throws Exception {
+	public void getAllTopics_returnok_withvalidrequest() throws Exception {
 
-		Mockito.when(topicService.getAllTopics()).thenReturn(Arrays.asList(new Topic("id", "desc", "name")));
+		Mockito.when(topicService.getAllTopics())
+				.thenReturn(Optional.of(Arrays.asList(new Topic("id", "desc", "name"))));
 
 		assertNotNull(topicController);
 
-		ResponseEntity<List<Topic>> response = topicController.getAllTopics();
+		ResponseEntity<List<Topic>> response = (ResponseEntity<List<Topic>>) topicController.getAllTopics();
 
 		assertTrue(response.getStatusCodeValue() == 200);
 
 		assertTrue(response.getBody().stream().count() == 1);
 
-		//assertTrue(false);
+		Mockito.verify(topicService).getAllTopics();
+	}
+
+	@Test
+	public void getAllTopics_returnok_withInvalidrequest() throws Exception {
+
+		Mockito.when(topicService.getAllTopics())
+				.thenReturn(Optional.ofNullable(null));
+
+		assertNotNull(topicController);
+
+		ResponseEntity response = topicController.getAllTopics();
+
+		assertTrue(response.getStatusCodeValue() == 500);
 
 		Mockito.verify(topicService).getAllTopics();
 	}

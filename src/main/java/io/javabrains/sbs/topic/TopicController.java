@@ -20,7 +20,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("api/topics")
 public class TopicController {
 
-	
 	private final TopicService topicService;
 
 	@Autowired
@@ -29,8 +28,12 @@ public class TopicController {
 	}
 
 	@RequestMapping()
-	public ResponseEntity<List<Topic>> getAllTopics() {
-		return ResponseEntity.ok(topicService.getAllTopics());
+	public ResponseEntity<?> getAllTopics() {
+		Optional<List<Topic>> optTopics = topicService.getAllTopics();
+		if (optTopics.isPresent())
+			return ResponseEntity.ok(optTopics.get());
+		
+		return ResponseEntity.status(500).build();
 	}
 
 	@RequestMapping("{id}")
