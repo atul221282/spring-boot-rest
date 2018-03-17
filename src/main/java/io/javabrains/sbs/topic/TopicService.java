@@ -3,9 +3,6 @@ package io.javabrains.sbs.topic;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-
 
 public interface TopicService {
 
