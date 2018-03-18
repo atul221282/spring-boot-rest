@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,20 +27,20 @@ public class TopicControllerTests {
 	@Autowired
 	private TopicController topicController;
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void getAllTopics_returnok_withvalidrequest() throws Exception {
 
-		Mockito.when(topicService.getAllTopics())
-				.thenReturn(Optional.of(Arrays.asList(new Topic("id", "desc", "name"))));
+		Mockito.when(topicService.getAllTopics()).thenReturn(
+				CompletableFuture.completedFuture(Optional.of(Arrays.asList(new Topic("id", "desc", "name")))));
 
 		assertNotNull(topicController);
 
-		@SuppressWarnings("unchecked")
-		ResponseEntity<List<Topic>> response = (ResponseEntity<List<Topic>>) topicController.getAllTopics();
+		CompletableFuture<ResponseEntity<?>> response = topicController.getAllTopics();
 
-		assertTrue(response.getStatusCodeValue() == 200);
+		assertTrue(response.get().getStatusCodeValue() == 200);
 
-		assertTrue(response.getBody().stream().count() == 1);
+		assertTrue(((List<Topic>) (response.get().getBody())).stream().count() == 1);
 
 		Mockito.verify(topicService).getAllTopics();
 	}
@@ -47,14 +48,13 @@ public class TopicControllerTests {
 	@Test
 	public void getAllTopics_returnError_withInvalidrequest() throws Exception {
 
-		Mockito.when(topicService.getAllTopics()).thenReturn(Optional.ofNullable(null));
+		Mockito.when(topicService.getAllTopics()).thenReturn(CompletableFuture.completedFuture(Optional.ofNullable(null)));
 
 		assertNotNull(topicController);
 
-		@SuppressWarnings("rawtypes")
-		ResponseEntity response = topicController.getAllTopics();
+		CompletableFuture<ResponseEntity<?>> response = topicController.getAllTopics();
 
-		assertTrue(response.getStatusCodeValue() == 500);
+		assertTrue(response.get().getStatusCodeValue() == 500);
 
 		Mockito.verify(topicService).getAllTopics();
 	}

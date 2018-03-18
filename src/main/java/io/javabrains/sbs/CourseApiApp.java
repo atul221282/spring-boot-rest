@@ -27,6 +27,7 @@ public class CourseApiApp {
 		 * This way of booting spring gives flexibility of setting application property
 		 */
 		HashMap<String, Object> props = new HashMap<>();
+		
 		props.put("server.port", 8080);
 
 		new SpringApplicationBuilder().sources(CourseApiApp.class).properties(props).run(args);

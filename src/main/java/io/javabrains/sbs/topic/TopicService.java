@@ -3,12 +3,15 @@ package io.javabrains.sbs.topic;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+import javax.validation.Valid;
 
 public interface TopicService {
 
-	public Optional<List<Topic>> getAllTopics();
+	public CompletableFuture<Optional<List<Topic>>> getAllTopics();
 
-	public CompletableFuture<Optional<Topic>> getTopic(String id);
+	public CompletableFuture<Optional<Topic>> getTopic(String id) throws InterruptedException, ExecutionException;
 
 	public void addTopic(Topic topic);
 

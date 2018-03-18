@@ -5,13 +5,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+import javax.validation.Valid;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
 @Lazy
+@Scope("prototype")
 public class TopicServiceImpl implements TopicService {
 
 	private List<Topic> topics;
@@ -24,16 +29,17 @@ public class TopicServiceImpl implements TopicService {
 		topics = new ArrayList<>(Arrays.asList(t1, t2, t3));
 	}
 
-	
-	public Optional<List<Topic>> getAllTopics() {
-		return Optional.of(topics);
+	@Override
+	@Async
+	public CompletableFuture<Optional<List<Topic>>> getAllTopics() {
+		return CompletableFuture.completedFuture(Optional.of(topics));
 	}
 
 	@Override
 	@Async
-	public CompletableFuture<Optional<Topic>> getTopic(String id) {
+	public CompletableFuture<Optional<Topic>> getTopic(String id) throws InterruptedException, ExecutionException {
 		return CompletableFuture.completedFuture(id.isEmpty() ? Optional.empty()
-				: getAllTopics().get().stream().filter(tp -> tp.getId().equals(id)).findFirst());
+				: getAllTopics().get().get().stream().filter(tp -> tp.getId().equals(id)).findFirst());
 	}
 
 	@Override
@@ -48,7 +54,7 @@ public class TopicServiceImpl implements TopicService {
 		if (!toUpdate.get().isPresent())
 			throw new Exception("No topic found");
 
-		int index = getAllTopics().get().lastIndexOf(toUpdate.get().get());
+		int index = getAllTopics().get().get().lastIndexOf(toUpdate.get().get());
 
 		topics.set(index, topic);
 	}

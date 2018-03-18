@@ -3,7 +3,11 @@ package io.javabrains.sbs.topic;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,16 +17,20 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-
 public class TopicServiceTests {
 
 	private TopicServiceImpl topicService;
 
 	@Test
-	public void getAllTopics_returnAllRecords() throws Exception {
+	public void getAllTopics_returnAllRecords() throws InterruptedException, ExecutionException {
 		topicService = Mockito.mock(TopicServiceImpl.class);
-		Mockito.when(topicService.getAllTopics()).thenReturn(Optional.of(Arrays.asList(new Topic("1", "d", "n"))));
-		assertTrue(topicService.getAllTopics().get().stream().count() == 1);
+
+		Mockito.when(topicService.getAllTopics()).thenReturn(
+			CompletableFuture.completedFuture(Optional.of(Arrays.asList(new Topic("1", "d", "n")))));
+
+		List<Topic> list = topicService.getAllTopics().get().get().stream().collect(Collectors.toList());
+
+		assertTrue(list.size() == 1);
 	}
 
 }

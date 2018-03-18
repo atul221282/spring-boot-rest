@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
+@IsCorrectTopic
 public class Topic {
 	public Topic() {}
 	@NonNull

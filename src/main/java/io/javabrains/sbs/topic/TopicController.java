@@ -7,10 +7,13 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,16 +28,19 @@ public class TopicController {
 
 	private final TopicService topicService;
 
-	@Autowired @Lazy
+	@Autowired
+	@Lazy
 	public TopicController(TopicService topicService) {
 		this.topicService = topicService;
 	}
 
+	@Async
 	@RequestMapping()
-	public ResponseEntity<?> getAllTopics() {
-		Optional<List<Topic>> optTopics = topicService.getAllTopics();
+	public CompletableFuture<ResponseEntity<?>> getAllTopics() throws InterruptedException, ExecutionException {
+		Optional<List<Topic>> optTopics = topicService.getAllTopics().get();
 
-		return optTopics.isPresent() ? ResponseEntity.ok(optTopics.get()) : ResponseEntity.status(500).build();
+		return optTopics.isPresent() ? CompletableFuture.completedFuture(ResponseEntity.ok(optTopics.get()))
+				: CompletableFuture.completedFuture(ResponseEntity.status(500).build());
 	}
 
 	@RequestMapping("{id}")
@@ -44,7 +50,7 @@ public class TopicController {
 		return topicOption.get().isPresent() ? ResponseEntity.ok(topicOption.get().get())
 				: ResponseEntity.badRequest().body(Arrays.asList("Some Error"));
 	}
-	
+
 	@RequestMapping("/name/{name}")
 	public ResponseEntity<?> getTopicByName(@PathVariable String name) {
 		Optional<Topic> topicOption = topicService.getTopicByName(name);
@@ -54,7 +60,7 @@ public class TopicController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> addTopic(@RequestBody Topic topic) {
+	public ResponseEntity<?> addTopic(@Valid @RequestBody Topic topic) {
 
 		topicService.addTopic(topic);
 
