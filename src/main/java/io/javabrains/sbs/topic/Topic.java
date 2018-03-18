@@ -1,5 +1,8 @@
 package io.javabrains.sbs.topic;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -9,9 +12,11 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 @IsCorrectTopic
+@Entity
 public class Topic {
 	public Topic() {}
 	@NonNull
+	@Id
 	private String id;
 	@NonNull
 	private String description;

@@ -7,8 +7,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import javax.validation.Valid;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
@@ -19,53 +18,53 @@ import org.springframework.stereotype.Service;
 @Scope("prototype")
 public class TopicServiceImpl implements TopicService {
 
-	private List<Topic> topics;
+	@Autowired
+	private final TopicRespository topicRespository;
 
-	public TopicServiceImpl() {
+	public TopicServiceImpl(TopicRespository topicRespository) {
+		this.topicRespository = topicRespository;
 		System.out.println("Service Init");
-		Topic t1 = new Topic("spring", "Spring Framework", "Spring Framework");
-		Topic t2 = new Topic("java", "Core Java", "Core Java Description");
-		Topic t3 = new Topic("javascript", "Javascript", "Javascript Description");
-		topics = new ArrayList<>(Arrays.asList(t1, t2, t3));
 	}
 
 	@Override
 	@Async
 	public CompletableFuture<Optional<List<Topic>>> getAllTopics() {
+		List<Topic> topics = new ArrayList<>();
+		topicRespository.findAll().forEach(topics::add);
 		return CompletableFuture.completedFuture(Optional.of(topics));
 	}
 
 	@Override
 	@Async
 	public CompletableFuture<Optional<Topic>> getTopic(String id) throws InterruptedException, ExecutionException {
-		return CompletableFuture.completedFuture(id.isEmpty() ? Optional.empty()
-				: getAllTopics().get().get().stream().filter(tp -> tp.getId().equals(id)).findFirst());
+		return CompletableFuture
+				.completedFuture(id.isEmpty() ? Optional.empty() : Optional.of(topicRespository.findOne(id)));
 	}
 
 	@Override
 	public void addTopic(Topic topic) {
-		topics.add(topic);
+		topicRespository.save(topic);
 	}
 
 	@Override
 	public void update(Topic topic) throws Exception {
-		CompletableFuture<Optional<Topic>> toUpdate = getTopic(topic.getId());
+		Topic toUpdate = topicRespository.findOne(topic.getId());
 
-		if (!toUpdate.get().isPresent())
+		if (toUpdate == null)
 			throw new Exception("No topic found");
 
-		int index = getAllTopics().get().get().lastIndexOf(toUpdate.get().get());
-
-		topics.set(index, topic);
+		topicRespository.save(topic);
 	}
 
 	@Override
 	public void deleteTopic(String id) {
-		topics.removeIf(x -> x.getId().equals(id));
+		topicRespository.delete(id);
 	}
 
 	@Override
 	public Optional<Topic> getTopicByName(String name) {
+		List<Topic> topics = new ArrayList<>();
+		topicRespository.findAll().forEach(topics::add);
 		return topics.stream().filter(x -> x.getName().equals(name)).findFirst();
 	}
 }
