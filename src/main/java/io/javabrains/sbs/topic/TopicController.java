@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -36,8 +38,16 @@ public class TopicController {
 	}
 
 	@RequestMapping("{id}")
-	public ResponseEntity<?> getTopic(@PathVariable String id) {
-		Optional<Topic> topicOption = topicService.getTopic(id);
+	public ResponseEntity<?> getTopic(@PathVariable String id) throws InterruptedException, ExecutionException {
+		CompletableFuture<Optional<Topic>> topicOption = topicService.getTopic(id);
+
+		return topicOption.get().isPresent() ? ResponseEntity.ok(topicOption.get().get())
+				: ResponseEntity.badRequest().body(Arrays.asList("Some Error"));
+	}
+	
+	@RequestMapping("/name/{name}")
+	public ResponseEntity<?> getTopicByName(@PathVariable String name) {
+		Optional<Topic> topicOption = topicService.getTopicByName(name);
 
 		return topicOption.isPresent() ? ResponseEntity.ok(topicOption.get())
 				: ResponseEntity.badRequest().body(Arrays.asList("Some Error"));
@@ -57,9 +67,9 @@ public class TopicController {
 	@RequestMapping(method = RequestMethod.PUT, value = "{id}")
 	public ResponseEntity<?> updateTopic(@PathVariable String id, @RequestBody Topic topic) throws Exception {
 
-		Optional<Topic> toUpdate = topicService.getTopic(id);
+		CompletableFuture<Optional<Topic>> toUpdate = topicService.getTopic(id);
 
-		if (!toUpdate.isPresent()) {
+		if (!toUpdate.get().isPresent()) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Arrays.asList("Some Error"));
 		}
 

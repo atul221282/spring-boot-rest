@@ -4,12 +4,14 @@ import java.util.HashMap;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * @author AtulChaudhary
  *
  */
 @SpringBootApplication
+@EnableAsync()
 public class CourseApiApp {
 
 	public static void main(String[] args) {
@@ -26,7 +28,7 @@ public class CourseApiApp {
 		 */
 		HashMap<String, Object> props = new HashMap<>();
 		props.put("server.port", 8080);
-		
+
 		new SpringApplicationBuilder().sources(CourseApiApp.class).properties(props).run(args);
 	}
 
