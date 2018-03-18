@@ -60,7 +60,7 @@ public class TopicController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> addTopic(@Valid @RequestBody Topic topic) {
+	public ResponseEntity<?> addTopic(@RequestBody Topic topic) {
 
 		topicService.addTopic(topic);
 
