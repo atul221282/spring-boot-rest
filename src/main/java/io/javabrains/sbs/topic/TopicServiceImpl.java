@@ -1,7 +1,6 @@
 package io.javabrains.sbs.topic;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -36,9 +35,9 @@ public class TopicServiceImpl implements TopicService {
 
 	@Override
 	@Async
-	public CompletableFuture<Optional<Topic>> getTopic(String id) throws InterruptedException, ExecutionException {
+	public CompletableFuture<Optional<Topic>> getTopic(Long id) throws InterruptedException, ExecutionException {
 		return CompletableFuture
-				.completedFuture(id.isEmpty() ? Optional.empty() : Optional.of(topicRespository.findOne(id)));
+				.completedFuture(id == null ? Optional.empty() : Optional.of(topicRespository.findOne(id)));
 	}
 
 	@Override
@@ -57,14 +56,12 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public void deleteTopic(String id) {
+	public void deleteTopic(Long id) {
 		topicRespository.delete(id);
 	}
 
 	@Override
 	public Optional<Topic> getTopicByName(String name) {
-		List<Topic> topics = new ArrayList<>();
-		topicRespository.findAll().forEach(topics::add);
-		return topics.stream().filter(x -> x.getName().equals(name)).findFirst();
+		return Optional.of(topicRespository.findByName(name));
 	}
 }

@@ -27,7 +27,7 @@ public class IsCorrectTopicValidator implements ConstraintValidator<IsCorrectTop
 			hm.put("description", "Description is mandatory");
 		}
 
-		if (value.getId().isEmpty()) {
+		if (value.getId() == null) {
 			hm.put("id", "Id is mandatory");
 		}
 

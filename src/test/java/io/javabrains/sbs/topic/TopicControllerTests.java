@@ -32,7 +32,7 @@ public class TopicControllerTests {
 	public void getAllTopics_returnok_withvalidrequest() throws Exception {
 
 		Mockito.when(topicService.getAllTopics()).thenReturn(
-				CompletableFuture.completedFuture(Optional.of(Arrays.asList(new Topic("id", "desc", "name")))));
+				CompletableFuture.completedFuture(Optional.of(Arrays.asList(new Topic("desc", "name")))));
 
 		assertNotNull(topicController);
 

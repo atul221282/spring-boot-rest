@@ -7,8 +7,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -44,7 +42,7 @@ public class TopicController {
 	}
 
 	@RequestMapping("{id}")
-	public ResponseEntity<?> getTopic(@PathVariable String id) throws InterruptedException, ExecutionException {
+	public ResponseEntity<?> getTopic(@PathVariable Long id) throws InterruptedException, ExecutionException {
 		CompletableFuture<Optional<Topic>> topicOption = topicService.getTopic(id);
 
 		return topicOption.get().isPresent() ? ResponseEntity.ok(topicOption.get().get())
@@ -71,21 +69,26 @@ public class TopicController {
 	}
 
 	@RequestMapping(method = RequestMethod.PUT, value = "{id}")
-	public ResponseEntity<?> updateTopic(@PathVariable String id, @RequestBody Topic topic) throws Exception {
+	public ResponseEntity<?> updateTopic(@PathVariable Long id, @RequestBody Topic topic) {
+		try {
 
-		CompletableFuture<Optional<Topic>> toUpdate = topicService.getTopic(id);
+			CompletableFuture<Optional<Topic>> toUpdate = topicService.getTopic(id);
 
-		if (!toUpdate.get().isPresent()) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Arrays.asList("Some Error"));
+			if (!toUpdate.get().isPresent()) {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Arrays.asList("Some Error"));
+			}
+
+			topicService.update(topic);
+
+			return ResponseEntity.noContent().build();
+
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Arrays.asList(e.getMessage()));
 		}
-
-		topicService.update(topic);
-
-		return ResponseEntity.noContent().build();
 	}
 
 	@DeleteMapping("{id}")
-	public ResponseEntity<?> deleteTopic(@PathVariable String id) {
+	public ResponseEntity<?> deleteTopic(@PathVariable Long id) {
 		topicService.deleteTopic(id);
 		return ResponseEntity.noContent().build();
 	}
