@@ -3,6 +3,7 @@ package io.javabrains.sbs.topic;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import javax.persistence.Table;
 
 import io.javabrains.sbs.course.Course;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -21,12 +23,11 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
+@NoArgsConstructor
 // @IsCorrectTopic
 @Entity
 @Table(name = "Topic")
 public class Topic {
-	public Topic() {
-	}
 
 	public Topic(String desc, String name) {
 		this.description = desc;
@@ -36,15 +37,18 @@ public class Topic {
 	@NonNull
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "Id")
 	private Long id;
 
 	@NonNull
+	@Column(name = "Description")
 	private String description;
 
 	@NonNull
+	@Column(name = "Name")
 	private String name;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "TopicId", nullable = true, referencedColumnName = "id")
+	@JoinColumn(name = "TopicId", nullable = true, referencedColumnName = "Id")
 	private List<Course> courses;
 }

@@ -1,5 +1,6 @@
 package io.javabrains.sbs.course;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,10 +25,14 @@ public class Course {
 	@NonNull
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="Id")
 	private Long id;
+	
 	@NonNull
+	@Column(name="Name")
 	private String name;
 	@NonNull
+	@Column(name="Description")
 	private String description;
 
 	@ManyToOne
