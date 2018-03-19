@@ -1,7 +1,6 @@
 package io.javabrains.sbs.topic;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -63,8 +62,6 @@ public class TopicServiceImpl implements TopicService {
 
 	@Override
 	public Optional<Topic> getTopicByName(String name) {
-		List<Topic> topics = new ArrayList<>();
-		topicRespository.findAll().forEach(topics::add);
-		return topics.stream().filter(x -> x.getName().equals(name)).findFirst();
+		return Optional.of(topicRespository.findByName(name));
 	}
 }
