@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import io.javabrains.sbs.topic.Topic;
 import lombok.Data;
 import lombok.NonNull;
@@ -37,5 +39,6 @@ public class Course {
 
 	@ManyToOne
 	@JoinColumn(name = "TopicId")
+	@JsonBackReference
 	private Topic topic;
 }

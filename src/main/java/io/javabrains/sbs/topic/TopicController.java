@@ -69,17 +69,22 @@ public class TopicController {
 	}
 
 	@RequestMapping(method = RequestMethod.PUT, value = "{id}")
-	public ResponseEntity<?> updateTopic(@PathVariable Long id, @RequestBody Topic topic) throws Exception {
+	public ResponseEntity<?> updateTopic(@PathVariable Long id, @RequestBody Topic topic) {
+		try {
 
-		CompletableFuture<Optional<Topic>> toUpdate = topicService.getTopic(id);
+			CompletableFuture<Optional<Topic>> toUpdate = topicService.getTopic(id);
 
-		if (!toUpdate.get().isPresent()) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Arrays.asList("Some Error"));
+			if (!toUpdate.get().isPresent()) {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Arrays.asList("Some Error"));
+			}
+
+			topicService.update(topic);
+
+			return ResponseEntity.noContent().build();
+
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Arrays.asList(e.getMessage()));
 		}
-
-		topicService.update(topic);
-
-		return ResponseEntity.noContent().build();
 	}
 
 	@DeleteMapping("{id}")
