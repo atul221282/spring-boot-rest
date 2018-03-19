@@ -5,8 +5,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import javax.validation.Valid;
-
 public interface TopicService {
 
 	public CompletableFuture<Optional<List<Topic>>> getAllTopics();

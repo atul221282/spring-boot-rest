@@ -26,13 +26,12 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor
-// @IsCorrectTopic
 @Entity
 @Table(name = "Topic")
 public class Topic {
 
-	public Topic(String desc, String name) {
-		this.description = desc;
+	public Topic(String description, String name) {
+		this.description = description;
 		this.name = name;
 	}
 
@@ -54,4 +53,5 @@ public class Topic {
 	@JoinColumn(name = "TopicId", nullable = true, referencedColumnName = "Id")
 	@JsonManagedReference
 	private List<Course> courses;
+
 }
