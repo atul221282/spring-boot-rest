@@ -26,7 +26,7 @@ public class TopicServiceTests {
 		topicService = Mockito.mock(TopicServiceImpl.class);
 
 		Mockito.when(topicService.getAllTopics()).thenReturn(
-			CompletableFuture.completedFuture(Optional.of(Arrays.asList(new Topic("1", "d", "n")))));
+			CompletableFuture.completedFuture(Optional.of(Arrays.asList(new Topic("d", "n")))));
 
 		List<Topic> list = topicService.getAllTopics().get().get().stream().collect(Collectors.toList());
 

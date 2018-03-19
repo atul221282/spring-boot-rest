@@ -42,7 +42,7 @@ public class TopicController {
 	}
 
 	@RequestMapping("{id}")
-	public ResponseEntity<?> getTopic(@PathVariable String id) throws InterruptedException, ExecutionException {
+	public ResponseEntity<?> getTopic(@PathVariable Long id) throws InterruptedException, ExecutionException {
 		CompletableFuture<Optional<Topic>> topicOption = topicService.getTopic(id);
 
 		return topicOption.get().isPresent() ? ResponseEntity.ok(topicOption.get().get())
@@ -69,7 +69,7 @@ public class TopicController {
 	}
 
 	@RequestMapping(method = RequestMethod.PUT, value = "{id}")
-	public ResponseEntity<?> updateTopic(@PathVariable String id, @RequestBody Topic topic) throws Exception {
+	public ResponseEntity<?> updateTopic(@PathVariable Long id, @RequestBody Topic topic) throws Exception {
 
 		CompletableFuture<Optional<Topic>> toUpdate = topicService.getTopic(id);
 
@@ -83,7 +83,7 @@ public class TopicController {
 	}
 
 	@DeleteMapping("{id}")
-	public ResponseEntity<?> deleteTopic(@PathVariable String id) {
+	public ResponseEntity<?> deleteTopic(@PathVariable Long id) {
 		topicService.deleteTopic(id);
 		return ResponseEntity.noContent().build();
 	}

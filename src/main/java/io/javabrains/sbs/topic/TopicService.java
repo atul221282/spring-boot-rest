@@ -11,13 +11,13 @@ public interface TopicService {
 
 	public CompletableFuture<Optional<List<Topic>>> getAllTopics();
 
-	public CompletableFuture<Optional<Topic>> getTopic(String id) throws InterruptedException, ExecutionException;
+	public CompletableFuture<Optional<Topic>> getTopic(Long id) throws InterruptedException, ExecutionException;
 
 	public void addTopic(Topic topic);
 
 	public void update(Topic topic) throws Exception;
 
-	public void deleteTopic(String id);
+	public void deleteTopic(Long id);
 
 	public Optional<Topic> getTopicByName(String name);
 }
