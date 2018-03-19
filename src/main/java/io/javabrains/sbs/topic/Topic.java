@@ -2,6 +2,7 @@ package io.javabrains.sbs.topic;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.NonNull;
@@ -13,8 +14,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @IsCorrectTopic
 @Entity
+@Table(name = "Topic")
 public class Topic {
-	public Topic() {}
+	public Topic() {
+	}
+
 	@NonNull
 	@Id
 	private String id;
