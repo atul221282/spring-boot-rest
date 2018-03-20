@@ -49,7 +49,7 @@ public class Topic {
 	@Column(name = "Name")
 	private String name;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "TopicId", nullable = true, referencedColumnName = "Id")
 	@JsonManagedReference
 	private List<Course> courses;
